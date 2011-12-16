@@ -184,9 +184,9 @@ static bool
 si_buscore_setup(si_info_t *sii, chipcregs_t *cc, uint bustype, uint32 savewin,
 	uint *origidx, void *regs)
 {
-	bool pci, pcie;
+	/*bool pci, pcie;*/
 	uint i;
-	uint pciidx, pcieidx, pcirev, pcierev;
+	/*uint pciidx, pcieidx, pcirev, pcierev;*/
 
 	cc = si_setcoreidx(&sii->pub, SI_CC_IDX);
 	ASSERT((uintptr)cc);
@@ -216,9 +216,11 @@ si_buscore_setup(si_info_t *sii, chipcregs_t *cc, uint bustype, uint32 savewin,
 	sii->pub.buscorerev = NOREV;
 	sii->pub.buscoreidx = BADIDX;
 
+	/*
 	pci = pcie = FALSE;
 	pcirev = pcierev = NOREV;
 	pciidx = pcieidx = BADIDX;
+	*/
 
 	for (i = 0; i < sii->numcores; i++) {
 		uint cid, crev;
@@ -231,7 +233,7 @@ si_buscore_setup(si_info_t *sii, chipcregs_t *cc, uint bustype, uint32 savewin,
 		SI_MSG(("CORE[%d]: id 0x%x rev %d base 0x%x regs 0x%p\n",
 		        i, cid, crev, sii->common_info->coresba[i], sii->common_info->regs[i]));
 
-		if (BUSTYPE(bustype) == PCI_BUS) {
+		/*if (BUSTYPE(bustype) == PCI_BUS) {
 			if (cid == PCI_CORE_ID) {
 				pciidx = i;
 				pcirev = crev;
@@ -241,7 +243,7 @@ si_buscore_setup(si_info_t *sii, chipcregs_t *cc, uint bustype, uint32 savewin,
 				pcierev = crev;
 				pcie = TRUE;
 			}
-		} else if ((BUSTYPE(bustype) == PCMCIA_BUS) &&
+		} else */if ((BUSTYPE(bustype) == PCMCIA_BUS) &&
 		           (cid == PCMCIA_CORE_ID)) {
 			sii->pub.buscorerev = crev;
 			sii->pub.buscoretype = cid;

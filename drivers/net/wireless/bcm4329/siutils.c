@@ -297,7 +297,6 @@ si_doattach(si_info_t *sii, uint devid, osl_t *osh, void *regs,
 	struct si_pub *sih = &sii->pub;
 	uint32 w, savewin;
 	chipcregs_t *cc;
-	char *pvars = NULL;
 	uint origidx;
 
 	ASSERT(GOODREGS(regs));
@@ -390,10 +389,6 @@ si_doattach(si_info_t *sii, uint devid, osl_t *osh, void *regs,
 		return NULL;
 	}
 
-	pvars = NULL;
-
-
-
 		if (sii->pub.ccrev >= 20) {
 			cc = (chipcregs_t *)si_setcore(sih, CC_CORE_ID, 0);
 			W_REG(osh, &cc->gpiopullup, 0);
@@ -404,8 +399,6 @@ si_doattach(si_info_t *sii, uint devid, osl_t *osh, void *regs,
 		/* Skip PMU initialization from the Dongle Host.
 		 * Firmware will take care of it when it comes up.
 		 */
-
-
 
 	return (sii);
 }
@@ -1008,10 +1001,6 @@ si_watchdog(si_t *sih, uint ticks)
 void
 si_watchdog_ms(si_t *sih, uint32 ms)
 {
-	si_info_t *sii;
-
-	sii = SI_INFO(sih);
-
 	si_watchdog(sih, wd_msticks * ms);
 }
 #endif
@@ -1133,10 +1122,6 @@ si_gpioout(si_t *sih, uint32 mask, uint32 val, uint8 priority)
 uint32
 si_gpioreserve(si_t *sih, uint32 gpio_bitmask, uint8 priority)
 {
-	si_info_t *sii;
-
-	sii = SI_INFO(sih);
-
 	/* only cores on SI_BUS share GPIO's and only applcation users need to
 	 * reserve/release GPIO
 	 */
@@ -1168,10 +1153,6 @@ si_gpioreserve(si_t *sih, uint32 gpio_bitmask, uint8 priority)
 uint32
 si_gpiorelease(si_t *sih, uint32 gpio_bitmask, uint8 priority)
 {
-	si_info_t *sii;
-
-	sii = SI_INFO(sih);
-
 	/* only cores on SI_BUS share GPIO's and only applcation users need to
 	 * reserve/release GPIO
 	 */
@@ -1199,10 +1180,7 @@ si_gpiorelease(si_t *sih, uint32 gpio_bitmask, uint8 priority)
 uint32
 si_gpioin(si_t *sih)
 {
-	si_info_t *sii;
 	uint regoff;
-
-	sii = SI_INFO(sih);
 	regoff = 0;
 
 	regoff = OFFSETOF(chipcregs_t, gpioin);
@@ -1213,10 +1191,7 @@ si_gpioin(si_t *sih)
 uint32
 si_gpiointpolarity(si_t *sih, uint32 mask, uint32 val, uint8 priority)
 {
-	si_info_t *sii;
 	uint regoff;
-
-	sii = SI_INFO(sih);
 	regoff = 0;
 
 	/* gpios could be shared on router platforms */
@@ -1234,10 +1209,7 @@ si_gpiointpolarity(si_t *sih, uint32 mask, uint32 val, uint8 priority)
 uint32
 si_gpiointmask(si_t *sih, uint32 mask, uint32 val, uint8 priority)
 {
-	si_info_t *sii;
 	uint regoff;
-
-	sii = SI_INFO(sih);
 	regoff = 0;
 
 	/* gpios could be shared on router platforms */
@@ -1255,9 +1227,6 @@ si_gpiointmask(si_t *sih, uint32 mask, uint32 val, uint8 priority)
 uint32
 si_gpioled(si_t *sih, uint32 mask, uint32 val)
 {
-	si_info_t *sii;
-
-	sii = SI_INFO(sih);
 	if (sih->ccrev < 16)
 		return -1;
 
@@ -1269,10 +1238,6 @@ si_gpioled(si_t *sih, uint32 mask, uint32 val)
 uint32
 si_gpiotimerval(si_t *sih, uint32 mask, uint32 gpiotimerval)
 {
-	si_info_t *sii;
-
-	sii = SI_INFO(sih);
-
 	if (sih->ccrev < 16)
 		return -1;
 
@@ -1283,10 +1248,8 @@ si_gpiotimerval(si_t *sih, uint32 mask, uint32 gpiotimerval)
 uint32
 si_gpiopull(si_t *sih, bool updown, uint32 mask, uint32 val)
 {
-	si_info_t *sii;
 	uint offs;
 
-	sii = SI_INFO(sih);
 	if (sih->ccrev < 20)
 		return -1;
 
@@ -1297,10 +1260,8 @@ si_gpiopull(si_t *sih, bool updown, uint32 mask, uint32 val)
 uint32
 si_gpioevent(si_t *sih, uint regtype, uint32 mask, uint32 val)
 {
-	si_info_t *sii;
 	uint offs;
 
-	sii = SI_INFO(sih);
 	if (sih->ccrev < 11)
 		return -1;
 
@@ -1402,10 +1363,7 @@ si_gpio_handler_process(si_t *sih)
 uint32
 si_gpio_int_enable(si_t *sih, bool enable)
 {
-	si_info_t *sii;
 	uint offs;
-
-	sii = SI_INFO(sih);
 	if (sih->ccrev < 11)
 		return -1;
 
